@@ -1,7 +1,10 @@
 const User=require('../Model/user')
 
+const bcrypt = require('bcrypt');
+
 const path=require('path');
 const { use } = require('../Router/userRouter');
+const { error } = require('console');
 
 exports.signup=(req,res)=>{
     res.sendFile(path.join(__dirname,'../','Views','signup.html'));
@@ -10,11 +13,19 @@ exports.signup=(req,res)=>{
 exports.addtoDb=(req,res)=>{
     let data=req.body;
     console.log(data);
-    User.create(data).then((result)=>{
-        res.json(result)
-    }).catch((error)=>{
-        console.log(error)
+    const salt=10;
+    let result=bcrypt.hash(data.password,salt).then((hash)=>{
+        data.password=hash;
+        User.create(data).then((result)=>{
+            res.json(result)
+        }).catch((error)=>{
+            console.log(error)
+        })
+    }).catch(error=>{
+        console.log(error);
     })
+    console.log(result)
+    
 }
 
 exports.fetchByEmail=(req,res)=>{
@@ -37,12 +48,14 @@ exports.userValidation=(req,res)=>{
                  }
       }).then(users => {
         if(users.length>0){
-            if(users[0].password===req.query.password){
-                res.json("User Login successfully")
-            }
-            else{
-                res.json("Invalid password");
-            }
+            bcrypt.compare(req.query.password,users[0].password).then((result)=>{
+                if(result){
+                    res.json("User Login successfully");
+                }
+                else{
+                    res.json("Invalid password")
+                }
+            })
         }
         else{
             res.json("User not found");
