@@ -1,5 +1,6 @@
 const User=require('../Model/user')
 
+const path=require('path');
 
 exports.login=(req,res)=>{
     res.sendFile(path.join(__dirname,'../','Views','login.html'));
