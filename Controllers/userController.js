@@ -15,3 +15,13 @@ exports.addtoDb=(req,res)=>{
         console.log(error)
     })
 }
+
+exports.fetchByEmail=(req,res)=>{
+    let email=User.findAll({
+        where: { email: req.query.email },
+      }).then(users => {
+        res.json(users);
+    }).catch((error)=>{
+        res.json("User not found");
+    })
+}

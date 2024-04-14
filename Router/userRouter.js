@@ -8,6 +8,8 @@ const userController=require('../Controllers/userController')
 
 router.get('/sign-up',userController.login);
 
+router.get('/get-by-email',userController.fetchByEmail);
+
 router.post('/create-data',userController.addtoDb);
 
 module.exports=router;

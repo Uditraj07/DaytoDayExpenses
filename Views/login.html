@@ -14,15 +14,15 @@
         <form action="" method="post" id="form">
             <label for="name" class="font-bold text-slate-500-600 text-base "> Name</label>
             <br>
-            <input type="text" name="name" placeholder="Enter Name..." required class="outline-none border-solid border-2 border-gray-600 w-[90%] mx-auto rounded-lg px-3 py-2 mt-1 font-light">
+            <input id="name" type="text" name="name" placeholder="Enter Name..." required class="outline-none border-solid border-2 border-gray-600 w-[90%] mx-auto rounded-lg px-3 py-2 mt-1 font-light">
             <br><br>
-            <label for="mail" class="font-bold text-slate-500-600 text-base"><i class="fa-solid fa-envelope"></i> Mail</label>
+            <label  for="mail" class="font-bold text-slate-500-600 text-base"><i class="fa-solid fa-envelope"></i> Mail</label>
             <br>
-            <input class="outline-none border-solid border-2 border-gray-600 w-[90%] mx-auto rounded-lg px-3 py-2 mt-1 font-light" type="email" name="mail" required placeholder="Enter mail... ">
+            <input id="mail" class="outline-none border-solid border-2 border-gray-600 w-[90%] mx-auto rounded-lg px-3 py-2 mt-1 font-light" type="email" name="mail" required placeholder="Enter mail... ">
             <br><br>
             <label for="password" class="font-bold text-slate-500-600 text-base"><i class="fa-solid fa-lock"></i> password</label>
             <br>
-            <input class="outline-none border-solid border-2 border-gray-600 w-[90%] mx-auto rounded-lg px-3 py-2 mt-1 font-light" type="password" name="password" required>
+            <input id="password" class="outline-none border-solid border-2 border-gray-600 w-[90%] mx-auto rounded-lg px-3 py-2 mt-1 font-light" type="password" name="password" required>
             <br>
             <button class="   rounded-lg px-3 py-2 my-3 bg-purple-700">Submit</button>
         </form>
@@ -35,22 +35,35 @@
         event.preventDefault();
         let name=event.target.name.value;
         let mail=event.target.mail.value;
-        let password=event.target.password.value;
-        let userDetails={
-            name:name,
-            email:mail,
-            password:password
-        }
-        CreateUser(userDetails).then((result)=>{
-            event.target.name.value='';
-            event.target.mail.value='';
-            event.target.password.value='';
+        fetchByEmail(mail).then((result)=>{
+            if(result.data.length==0){
+                let password=event.target.password.value;
+                let userDetails={
+                    name:name,
+                    email:mail,
+                    password:password
+                }
+                CreateUser(userDetails).then((result)=>{
+                    event.target.name.value='';
+                    event.target.mail.value='';
+                    event.target.password.value='';
+                }).catch((error)=>{
+                    console.log(error);
+                })
+            }
+            else{
+                alert("Already registered")
+            }
         }).catch((error)=>{
-            console.log(error);
+            console.log(error)
         })
+        
     })
     function CreateUser(userDetails){
         return axios.post("http://localhost:4000/User/create-data", userDetails)
+    }
+    function fetchByEmail(email){
+        return axios.get(`http://localhost:4000/User/get-by-email?email=${email}`);
     }
 </script>
 </html>
