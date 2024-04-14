@@ -10,8 +10,12 @@
 <body class="bg-slate-400">
     <div class="login-form border-black border-solid border-2 text-center p-3 max-w-80 mx-auto rounded-lg bg-green-600 mt-24">
         <span class="font-bold text-2xl mb-0"><i class="fa-solid fa-user-plus  text-blue-700 "></i></span>
-        <h1 class="font-bold font-sans text-3xl text-amber-700 mb-2 p-2 text-center pt-0 capitalize">login Here </h1>
-        <form action="" method="get" id="form">
+        <h1 class="font-bold font-sans text-3xl text-amber-700 mb-2 p-2 text-center pt-0">Sign up Here </h1>
+        <form action="" method="post" id="form">
+            <label for="name" class="font-bold text-slate-500-600 text-base "> Name</label>
+            <br>
+            <input id="name" type="text" name="name" placeholder="Enter Name..." required class="outline-none border-solid border-2 border-gray-600 w-[90%] mx-auto rounded-lg px-3 py-2 mt-1 font-light">
+            <br><br>
             <label  for="mail" class="font-bold text-slate-500-600 text-base"><i class="fa-solid fa-envelope"></i> Mail</label>
             <br>
             <input id="mail" class="outline-none border-solid border-2 border-gray-600 w-[90%] mx-auto rounded-lg px-3 py-2 mt-1 font-light" type="email" name="mail" required placeholder="Enter mail... ">
@@ -19,9 +23,8 @@
             <label for="password" class="font-bold text-slate-500-600 text-base"><i class="fa-solid fa-lock"></i> password</label>
             <br>
             <input id="password" class="outline-none border-solid border-2 border-gray-600 w-[90%] mx-auto rounded-lg px-3 py-2 mt-1 font-light" type="password" name="password" required>
-            <br>  
-            <a href="sign-up" class=" rounded-lg px-3 py-2 my-3 bg-purple-700 capitalize">Sign Up</a>
-            <button class="rounded-lg px-3 py-2 my-3 bg-purple-700">Login</button>
+            <br>
+            <button class="   rounded-lg px-3 py-2 my-3 bg-purple-700">Submit</button>
         </form>
     </div>
 </body>
@@ -30,28 +33,38 @@
     let form=document.querySelector("#form");
     form.addEventListener('submit',(event)=>{
         event.preventDefault();
+        let name=event.target.name.value;
         let mail=event.target.mail.value;
         let password=event.target.password.value;
-        UserValidation(mail,password).then((result)=>{
+        fetchByEmail(mail).then((result)=>{
             if(result.data.length==0){
-                alert("Invalid credentials")
+                
+                let userDetails={
+                    name:name,
+                    email:mail,
+                    password:password
+                }
+                CreateUser(userDetails).then((result)=>{
+                    event.target.name.value='';
+                    event.target.mail.value='';
+                    event.target.password.value='';
+                }).catch((error)=>{
+                    console.log(error);
+                })
             }
             else{
-                alert("Login successfull");
-                event.target.mail.value='';
-                event.target.password.value='';
+                alert("Already registered ")
             }
         }).catch((error)=>{
-            console.log(error);
+            console.log(error)
         })
+        
     })
-    let signupBtn=document.getElementById("signup-btn");
-    signupBtn.onclick=function(){
-       return axios.get('http://localhost:4000/User/sign-up')
+    function CreateUser(userDetails){
+        return axios.post("http://localhost:4000/User/create-data", userDetails)
     }
-    function UserValidation(email,password){
-        const url = `http://localhost:4000/User/user-validation?email=${email}&password=${password}`;
-        return axios.get(url);
+    function fetchByEmail(email){
+        return axios.get(`http://localhost:4000/User/get-by-email?email=${email}`);
     }
 </script>
 </html>
