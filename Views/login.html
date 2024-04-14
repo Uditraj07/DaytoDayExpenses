@@ -33,13 +33,13 @@
         let mail=event.target.mail.value;
         let password=event.target.password.value;
         UserValidation(mail,password).then((result)=>{
-            if(result.data.length==0){
-                alert("Invalid credentials")
+            if(result.data==="User Login successfully"){
+                alert("User Login successfully");
+                event.target.mail.value="";
+                event.target.password.value="";
             }
             else{
-                alert("Login successfull");
-                event.target.mail.value='';
-                event.target.password.value='';
+                alert(result.data);
             }
         }).catch((error)=>{
             console.log(error);
