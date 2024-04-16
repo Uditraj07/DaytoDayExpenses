@@ -26,32 +26,5 @@
     </div>
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.1/axios.min.js"></script>
-<script>
-    let form=document.querySelector("#form");
-    form.addEventListener('submit',(event)=>{
-        event.preventDefault();
-        let mail=event.target.mail.value;
-        let password=event.target.password.value;
-        UserValidation(mail,password).then((result)=>{
-            if(result.data==="User Login successfully"){
-                alert("User Login successfully");
-                event.target.mail.value="";
-                event.target.password.value="";
-            }
-            else{
-                alert(result.data);
-            }
-        }).catch((error)=>{
-            console.log(error);
-        })
-    })
-    // let signupBtn=document.getElementById("signup-btn");
-    // signupBtn.onclick=function(){
-    //    return axios.get('http://localhost:4000/User/sign-up')
-    // }
-    function UserValidation(email,password){
-        const url = `http://localhost:4000/User/user-validation?email=${email}&password=${password}`;
-        return axios.get(url);
-    }
-</script>
+<script src="http://localhost:4000/login.js"></script>
 </html>

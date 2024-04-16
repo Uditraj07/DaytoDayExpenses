@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<
+<body class="bg-slate-600">
+    <div class="container max-w-screen-xl mx-auto px-4 uppercase ">
+        <div class="text-center py-5">
+            <h1 class="text-amber-500 text-4xl text-center ">Add your expenses <i class="fa-solid fa-money-bill"></i></h1>
+            <div class="py-4 form border-2 border-solid border-green-700 rounded-lg text-center max-w-2xl mx-auto my-3">
+                <form action="" class="" id="form">
+                    <label for="amout" class="font-bold text-black">amout</label><br>
+                    <input type="text" name="amout" id="" placeholder="Enter the expense amout" class="w-11/12 mx-auto p-3 rounded-lg outline-none mt-2 " required><br><br>
+                    <label for="description"class="font-bold text-black" >description</label><br>
+                    <input type="text" name="description" id="" placeholder="Enter the description" class="w-11/12 mx-auto p-3 rounded-lg outline-none mt-2 " required><br><br>
+                    <label for="category" class="font-bold text-black">Category</label><br>
+                    <select name="category" id="" class="w-11/12 mx-auto p-3 rounded-lg outline-none mt-2">
+                        <option value="null">Enter category</option>
+                        <option value="food" class="capitalize">food</option>
+                        <option value="petrol" class="capitalize">petrol</option>
+                        <option value="party" class="capitalize">party</option>
+                        <option value="salary" class="capitalize">salary</option>
+                    </select>
+                    <button class="py-3 px-5 text-center bg-yellow-500 text-black rounded-lg my-2">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="container max-w-screen-xl mx-auto px-5  py-5 ">
+        <div class=" py-5">
+            <h1 class="text-amber-500 text-4xl text-center ">Your All expense</h1>
+            <ul id="all-expenses" class="mt-5">
+               
+            </ul>
+        </div>
+    </div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.1/axios.min.js"></script>
+<script src="http://localhost:4000/expense.js"></script>
+</html>
