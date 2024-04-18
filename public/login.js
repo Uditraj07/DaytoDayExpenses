@@ -4,12 +4,12 @@ let form=document.querySelector("#form");
         let mail=event.target.mail.value;
         let password=event.target.password.value;
         UserValidation(mail,password).then((result)=>{
-            if(result.data==="User Login successfully"){
+            if(result.data.message){
                 alert("User Login successfully");
-                sessionStorage.setItem('result',true);
+                sessionStorage.setItem('id',result.data.id);
                 event.target.mail.value="";
                 event.target.password.value="";
-                window.location.href = '/Expenses'
+                window.location.href = '/Expenses';
             }
             else{
                 alert(result.data);

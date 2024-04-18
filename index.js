@@ -31,6 +31,9 @@ app.use('/',(req,res)=>{
 })
 
 
+user.hasMany(expense);
+expense.belongsTo(user);
+
 sequelize.sync();
 
 app.listen(4000);

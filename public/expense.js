@@ -9,7 +9,8 @@ form.addEventListener('submit',(event)=>{
     let expenseDetails={
         amount:amount,
         description:description,
-        category:category  
+        category:category,
+        userId:sessionStorage.getItem('id')
     }
     createExpense(expenseDetails).then((result)=>{
             alert("Expenses addedd successfully");
@@ -169,8 +170,9 @@ function updateDetails(id,expenseDetails){
         return axios.put(`http://localhost:4000/Expenses/update/${id}`,expenseDetails)
     }
 
-function getAllExpenses(expenseDetails){
-     axios.get("http://localhost:4000/Expenses/get-all-expenses", expenseDetails).then((result)=>{
+function getAllExpenses(){
+    let id=sessionStorage.getItem("id");
+     axios.get(`http://localhost:4000/Expenses/get-all-expenses?id=${id}`).then((result)=>{
         let expenses=result.data;
         expenses.forEach((expenseDetails)=>{
             addtoList(expenseDetails);

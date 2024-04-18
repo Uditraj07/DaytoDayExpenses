@@ -2,6 +2,8 @@ const User=require('../Model/user')
 
 const bcrypt = require('bcrypt');
 
+const jwt=require('jsonwebtoken');
+
 const path=require('path');
 const { use } = require('../Router/userRouter');
 const { error } = require('console');
@@ -42,6 +44,10 @@ exports.login=(req,res)=>{
     res.sendFile(path.join(__dirname,'../','Views','login.html'))
 }
 
+function encryption(id){
+        return jwt.sign({id:id},'eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTcxMzQ2MTk5NywiaWF0IjoxNzEzNDYxOTk3fQ')
+}
+
 exports.userValidation=(req,res)=>{
     let email=User.findAll({
         where: { email: req.query.email,
@@ -50,7 +56,7 @@ exports.userValidation=(req,res)=>{
         if(users.length>0){
             bcrypt.compare(req.query.password,users[0].password).then((result)=>{
                 if(result){
-                    res.json("User Login successfully");
+                    res.json({message:true,id:encryption(users[0].id)});
                 }
                 else{
                     res.json("Invalid password")
