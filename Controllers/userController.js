@@ -27,7 +27,6 @@ exports.addtoDb=(req,res)=>{
         console.log(error);
     })
     console.log(result)
-    
 }
 
 exports.fetchByEmail=(req,res)=>{

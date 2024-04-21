@@ -1,5 +1,3 @@
-
-
 let form=document.getElementById("form");
 form.addEventListener('submit',(event)=>{
     event.preventDefault();
@@ -180,3 +178,51 @@ function getAllExpenses(){
      })
 }
 getAllExpenses();
+
+let razBtn=document.querySelector("#razor-pay-button");
+razBtn.addEventListener('click',async (e)=>{
+    e.preventDefault();
+    const userId=sessionStorage.getItem("id");
+    let response=await axios.get("http://localhost:4000/Purchase/purchase-membership",{headers:{"authorization":userId}})
+    
+    var option={
+        "key":response.data.key_id,
+        "order_id":response.data.order.id,
+        "handler":async function(response){
+            console.log(response)
+            let res=await axios.post("http://localhost:4000/Purchase/update-purchase",{
+                orderId:option.order_id,
+                paymentId:response.razorpay_payment_id,
+            },{headers:{"authorization":userId,"status":"success"}})
+
+            alert(res.data)
+            razBtn.classList.add("hidden");
+            let premium=razBtn.nextElementSibling;
+            premium.classList.remove('hidden');
+        }
+    }
+    const rzp1=new Razorpay(option);
+     rzp1.open();
+     rzp1.on('payment.failed', async (response) => {
+        alert("Payment failed. Please try again.");
+    
+        // Send a request to your backend to update the payment status
+        try {
+            console.log(response)
+            const userId = sessionStorage.getItem("id");
+            const orderId = option.order_id;
+            const paymentId = response.error.metadata.payment_id;
+            console.log(paymentId)
+    
+            await axios.post("http://localhost:4000/Purchase/update-purchase", {
+                orderId,
+                paymentId
+            },{headers:{"authorization":userId,"status":"failed"}});
+            console.log("Payment failure details sent to the server.");
+        } 
+        catch (error) {
+            console.error("Error sending payment failure details to the server:", error);
+        }
+    });
+    
+})

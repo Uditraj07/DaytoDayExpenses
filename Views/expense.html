@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        console.log(sessionStorage.getItem("id"));
+        
         if(sessionStorage.getItem("id")==null){
             window.location.href="../User/login"
         }
@@ -15,6 +15,12 @@
 </head>
 
 <body class="bg-slate-600">
+    <div class="container max-w-screen-xl mx-auto px-4 uppercase ">
+        <div class="text-center py-5">
+            <a id="razor-pay-button" href="" class="px-5 py-3 bg-red-600 font-bold text-black mb-3 rounded-lg float-right">Premium</a>
+            <a id="premium-button" href="" class="hidden px-5 py-3 bg-red-600 font-bold text-black mb-3 rounded-lg float-right">Premium Member</a>
+        </div>
+    </div>
     <div class="container max-w-screen-xl mx-auto px-4 uppercase ">
         <div class="text-center py-5">
             <h1 class="text-amber-500 text-4xl text-center ">Add your expenses <i class="fa-solid fa-money-bill"></i></h1>
@@ -47,5 +53,6 @@
     </div>
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.1/axios.min.js"></script>
-<script src="http://localhost:4000/expense.js"></script>
+<script src="http://localhost:4000/expense.js"></script>\
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </html>
