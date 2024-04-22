@@ -177,6 +177,18 @@ function getAllExpenses(){
         })
      })
 }
+async function checkPremium(){
+    let id=sessionStorage.getItem("id");
+    let response=await axios.get(`http://localhost:4000/User/check-premium`,{headers:{"authorization":id}})
+    if(response.data.isPremium){
+        let razBtn=document.querySelector("#razor-pay-button");
+        razBtn.classList.add('hidden');
+        razBtn.nextElementSibling.classList.remove('hidden');
+        let leaderboardButton=document.querySelector("#leaderboard-button");
+        leaderboardButton.classList.remove("hidden")
+    }
+}
+checkPremium();
 getAllExpenses();
 
 let razBtn=document.querySelector("#razor-pay-button");
@@ -225,4 +237,24 @@ razBtn.addEventListener('click',async (e)=>{
         }
     });
     
+})
+let leaderboardButton=document.getElementById("leaderboard-button");
+let leaderboardList=document.getElementById("leaderboard").querySelector("ul");
+leaderboardButton.addEventListener('click',async (event)=>{
+    try{
+        event.preventDefault();
+
+    let result= await axios.get('http://localhost:4000/Expenses/getallexpenses');
+    result.data.forEach((data)=>{
+        document.getElementById("leaderboard").classList.remove('hidden')
+        let li=document.createElement('li');
+        li.className.add="font-bold  text-xl"
+        li.innerHTML=`Name: ${data.name}  totalExpense: ${data.totalExpenses}`;
+        leaderboardList.append(li);
+        leaderboardButton.classList.add('hidden')
+    })
+    }
+    catch(error){
+        console.log(error);
+    }
 })

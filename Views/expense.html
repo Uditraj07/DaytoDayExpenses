@@ -15,10 +15,11 @@
 </head>
 
 <body class="bg-slate-600">
-    <div class="container max-w-screen-xl mx-auto px-4 uppercase ">
-        <div class="text-center py-5">
-            <a id="razor-pay-button" href="" class="px-5 py-3 bg-red-600 font-bold text-black mb-3 rounded-lg float-right">Premium</a>
-            <a id="premium-button" href="" class="hidden px-5 py-3 bg-red-600 font-bold text-black mb-3 rounded-lg float-right">Premium Member</a>
+    <div class="container max-w-screen-xl mx-auto px-4 uppercase mb-7 w-full ">
+        <div class="text-center py-5 flex flex-col sm:flex-row justify-end gap-2">
+            <a id="leaderboard-button" href=""  class="  cursor-pointer hidden px-5 py-3 bg-red-600 font-bold text-black mb-3 rounded-lg  ml-3">Leaderboard</a>
+            <a id="razor-pay-button" href="" class=" px-5 py-3 bg-red-600 font-bold text-black mb-3 rounded-lg ">Premium</a>
+            <a id="premium-button"  class="cursor-text hidden px-5 py-3 bg-red-600 font-bold text-black mb-3 rounded-lg ">Premium Member</a>
         </div>
     </div>
     <div class="container max-w-screen-xl mx-auto px-4 uppercase ">
@@ -47,6 +48,14 @@
         <div class=" py-5">
             <h1 class="text-amber-500 text-4xl text-center ">Your All expense</h1>
             <ul id="all-expenses" class="mt-5">
+               
+            </ul>
+        </div>
+    </div>
+    <div id="leaderboard" class="container max-w-screen-xl mx-auto px-5  py-5  hidden">
+        <div class=" py-5">
+            <h1 class="text-blue-500 text-4xl">Leaderboard</h1>
+            <ul id="all-details" class="mt-5">
                
             </ul>
         </div>

@@ -1,9 +1,13 @@
 const Expenses=require('../Model/expenses')
 
+const User=require('../Model/user')
+
 const jwt=require('jsonwebtoken');
 
+const sequelize=require('sequelize')
+
 const path=require('path');
-const { use } = require('../Router/userRouter');
+
 
 exports.expenses=(req,res)=>{
     res.sendFile(path.join(__dirname,'../','Views','expense.html'));
@@ -61,3 +65,25 @@ exports.update=(req,res)=>{
       console.error('Error updating record:', err);
     });
   }
+exports.getallexpenses= async (req,res)=>{
+  // Query to get the total sum of expenses for each user
+let response=await User.findAll({
+  attributes: ['name', [sequelize.fn('SUM', sequelize.col('expensses.amount')), 'totalExpenses']],
+  include: [{
+    model: Expenses,
+    attributes: [],
+    required: false // Use left join to include users without expenses
+  }],
+  group: ['User.id'],
+  order: [[sequelize.literal('totalExpenses'), 'DESC']]
+})
+  let array=[];
+  for(let i of response){
+    if(i.dataValues.totalExpenses==null){
+      i.dataValues.totalExpenses=0;
+    }
+    array.push(i.dataValues);
+  }
+  res.json(array);
+
+}

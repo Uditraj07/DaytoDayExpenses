@@ -69,3 +69,12 @@ exports.userValidation=(req,res)=>{
         console.log(error)
     })
 }
+
+exports.checkPremium=(req,res)=>{
+    let id=req.headers['authorization'];
+    let user=jwt.verify(id,'eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTcxMzQ2MTk5NywiaWF0IjoxNzEzNDYxOTk3fQ')
+    User.findByPk(user.id).then((result)=>{
+        console.log(result.dataValues.isPremium)
+       res.json({isPremium:result.dataValues.isPremium});
+    })
+}

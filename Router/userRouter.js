@@ -16,4 +16,6 @@ router.get('/login',userController.login)
 
 router.get('/user-validation',userController.userValidation)
 
+router.get('/check-premium',userController.checkPremium);
+
 module.exports=router;
