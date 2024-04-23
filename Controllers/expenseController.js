@@ -6,6 +6,8 @@ const jwt=require('jsonwebtoken');
 
 const sequelize=require('sequelize')
 
+const Sequelize=require('../Util/database');
+
 const path=require('path');
 
 
@@ -13,12 +15,27 @@ exports.expenses=(req,res)=>{
     res.sendFile(path.join(__dirname,'../','Views','expense.html'));
 }
 
-exports.addExpenses=(req,res)=>{
+exports.addExpenses= async(req,res)=>{
+  const t = await Sequelize.transaction();
   let user=jwt.verify(req.body.userId,'eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTcxMzQ2MTk5NywiaWF0IjoxNzEzNDYxOTk3fQ')
   req.body.userId=user.id;
-    Expenses.create(req.body).then((result)=>{
-        res.json(result)
-    })
+  User.findByPk(user.id,{ transaction: t })
+  .then((result) => {
+    let totalExpenses = Number(result.dataValues.totalExpense) + Number(req.body.amount);
+    User.update({ totalExpense: totalExpenses }, { where: { id: user.id } })
+      .then((results) => {
+        console.log(results);
+        Expenses.create(req.body).then(async (result)=>{
+          await t.commit();
+          res.json(result)
+      }).catch(async (error)=>{await t.rollback();})
+      }).catch(async (error)=>{
+        await t.rollback();
+      })
+  }).catch(async (error)=>{
+      await t.rollback();
+  })
+    
 }
 exports.getAllExpenses=(req,res)=>{
   let userId=req.query.id;
@@ -34,8 +51,15 @@ exports.getAllExpenses=(req,res)=>{
   })
 }
 
-exports.delete=(req,res)=>{
+exports.delete=async (req,res)=>{
     let id=req.params.id;
+    let response=await Expenses.findByPk(id);
+    let amount=response.dataValues.amount;
+    let userId = req.headers['authorization'];
+    let user_id=jwt.verify(userId,'eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTcxMzQ2MTk5NywiaWF0IjoxNzEzNDYxOTk3fQ')
+    response= await User.findByPk(user_id.id);
+    let totalAmount=Number(response.dataValues.totalExpense)-Number(amount);
+    console.log(totalAmount);
     Expenses.destroy({
           where: {
             id: id
@@ -44,6 +68,11 @@ exports.delete=(req,res)=>{
         .then(numDeleted => {
           if (numDeleted === 1) {
             res.json('Record deleted successfully.');
+            User.update({totalExpense:totalAmount},{
+              where: {
+                id: user_id.id
+              }
+            })
           } else {
             res.json('Record not found or not deleted.');
           }
@@ -67,23 +96,15 @@ exports.update=(req,res)=>{
   }
 exports.getallexpenses= async (req,res)=>{
   // Query to get the total sum of expenses for each user
-let response=await User.findAll({
-  attributes: ['name', [sequelize.fn('SUM', sequelize.col('expensses.amount')), 'totalExpenses']],
-  include: [{
-    model: Expenses,
-    attributes: [],
-    required: false // Use left join to include users without expenses
-  }],
-  group: ['User.id'],
-  order: [[sequelize.literal('totalExpenses'), 'DESC']]
-})
-  let array=[];
-  for(let i of response){
-    if(i.dataValues.totalExpenses==null){
-      i.dataValues.totalExpenses=0;
-    }
-    array.push(i.dataValues);
-  }
-  res.json(array);
+      let response=await User.findAll({
+        attributes: ['name', 'totalExpense'], 
+        order: [['totalExpense', 'DESC']] 
+      });
+        console.log(response);
+        let array=[];
+        for(let i of response){
+          array.push(i.dataValues);
+        }
+        res.json(array);
 
 }

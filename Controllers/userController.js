@@ -5,8 +5,7 @@ const bcrypt = require('bcrypt');
 const jwt=require('jsonwebtoken');
 
 const path=require('path');
-const { use } = require('../Router/userRouter');
-const { error } = require('console');
+
 
 exports.signup=(req,res)=>{
     res.sendFile(path.join(__dirname,'../','Views','signup.html'));

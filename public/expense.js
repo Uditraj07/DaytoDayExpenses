@@ -161,7 +161,7 @@ function createExpense(expenseDetails) {
     }
 
 function deleteRecord(id){
-        return axios.delete(`http://localhost:4000/Expenses/delete/${id}`)
+        return axios.delete(`http://localhost:4000/Expenses/delete/${id}`,{headers:{'authorization':sessionStorage.getItem("id")}})
 }
 
 function updateDetails(id,expenseDetails){
@@ -211,6 +211,7 @@ razBtn.addEventListener('click',async (e)=>{
             razBtn.classList.add("hidden");
             let premium=razBtn.nextElementSibling;
             premium.classList.remove('hidden');
+            document.getElementById("leaderboard-button").classList.remove('hidden');
         }
     }
     const rzp1=new Razorpay(option);
@@ -249,7 +250,7 @@ leaderboardButton.addEventListener('click',async (event)=>{
         document.getElementById("leaderboard").classList.remove('hidden')
         let li=document.createElement('li');
         li.className.add="font-bold  text-xl"
-        li.innerHTML=`Name: ${data.name}  totalExpense: ${data.totalExpenses}`;
+        li.innerHTML=`Name: ${data.name} |  totalExpense: ${data.totalExpense}`;
         leaderboardList.append(li);
         leaderboardButton.classList.add('hidden')
     })

@@ -23,7 +23,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 const userRouter=require('./Router/userRouter')
 
 const expenseRouter=require('./Router/expensesRouter');
-const { FORCE } = require('sequelize/lib/index-hints');
+
 
 
 
