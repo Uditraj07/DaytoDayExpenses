@@ -24,14 +24,15 @@ const userRouter=require('./Router/userRouter')
 
 const expenseRouter=require('./Router/expensesRouter');
 
-
-
+const resetRouter=require('./Router/resetPassword');
 
 app.use('/User',userRouter);
 
 app.use('/Expenses',expenseRouter)
 
 app.use('/Purchase',orderRouter);
+
+app.use('/reset',resetRouter)
 
 app.use('/',(req,res)=>{
     res.send("This is index page")
